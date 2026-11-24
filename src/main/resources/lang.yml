@@ -1,0 +1,216 @@
+# YuanCode 语言文件 - 仅支持 MiniMessage。
+# 占位符使用 {花括号}，避免与 MiniMessage 标签冲突。
+prefix: "<gradient:#00E0FF:#7A5CFF><bold>YuanCode</bold></gradient> <dark_gray>»</dark_gray> "
+
+general:
+  no-permission: "<red>你没有权限执行此操作。</red>"
+  player-only: "<red>只有玩家可以执行此命令。</red>"
+  database-unavailable: "<red>数据库尚未就绪，请稍后重试或查看控制台。</red>"
+
+help:
+  lines:
+    - "<dark_gray>━━━━</dark_gray> <gradient:#00E0FF:#7A5CFF><bold>YuanCode</bold></gradient> <dark_gray>━━━━</dark_gray>"
+    - "<white>/yc redeem [code]</white> <dark_gray>-</dark_gray> <gray>兑换兑换码</gray>"
+    - "<white>/yc gui</white> <dark_gray>-</dark_gray> <gray>打开管理 GUI</gray>"
+    - "<white>/yc list [page]</white> <dark_gray>-</dark_gray> <gray>列出兑换码</gray>"
+    - "<white>/yc info [code]</white> <dark_gray>-</dark_gray> <gray>查看详情</gray>"
+    - "<white>/yc create [code] [type]</white> <dark_gray>-</dark_gray> <gray>创建兑换码</gray>"
+    - "<white>/yc delete [code] confirm</white> <dark_gray>-</dark_gray> <gray>删除兑换码</gray>"
+    - "<white>/yc enable|disable [code]</white> <dark_gray>-</dark_gray> <gray>启用或禁用</gray>"
+    - "<white>/yc set [code] [field] [value]</white> <dark_gray>-</dark_gray> <gray>修改字段</gray>"
+    - "<white>/yc reward [add|list|remove|clear] ...</white> <dark_gray>-</dark_gray> <gray>管理奖励</gray>"
+    - "<white>/yc generate [template] [amount] [length] [prefix]</white> <dark_gray>-</dark_gray> <gray>批量生成</gray>"
+    - "<white>/yc export [filename]</white> <dark_gray>-</dark_gray> <gray>导出 CSV</gray>"
+    - "<white>/yc reload</white> <dark_gray>-</dark_gray> <gray>热重载配置与兑换码</gray>"
+    - "<white>/yc stats</white> <dark_gray>-</dark_gray> <gray>查看统计</gray>"
+
+redeem:
+  usage: "<yellow>用法：</yellow><white>/yc redeem [code]</white>"
+  success: "<green>兑换成功！</green> <gray>兑换码：</gray><white>{code}</white> <dark_gray>·</dark_gray> <gray>累计领取：</gray><white>{used}</white>"
+  pending: "<yellow>有 {pending} 项奖励将在 {delay} 后发放，请保持在线或稍后上线领取。</yellow>"
+  partial-failure: "<red>有 {failed} 项奖励发放失败，请联系管理员查看控制台。</red>"
+  unknown_code: "<red>兑换码不存在或已失效。</red>"
+  disabled: "<red>该兑换码已被禁用。</red>"
+  not_started: "<red>该兑换码尚未开始。</red>"
+  expired: "<red>该兑换码已过期。</red>"
+  no_permission: "<red>你没有使用该兑换码的权限。</red>"
+  uuid_not_allowed: "<red>该兑换码不属于你的账号。</red>"
+  uuid_blocked: "<red>你的账号已被禁止使用该兑换码。</red>"
+  no_rewards: "<red>该兑换码没有可发放的奖励，请联系管理员。</red>"
+  global_limit: "<red>该兑换码已被领完。</red>"
+  player_limit: "<red>你已达到该兑换码的领取上限。</red>"
+  cooldown: "<red>领取冷却中，请在 <white>{retry}</white> 秒后重试。</red>"
+  ip_limit: "<red>当前 IP 已达到该兑换码的领取上限。</red>"
+  busy: "<yellow>请求正在处理中，请勿重复点击。</yellow>"
+  rate_limited: "<red>操作过于频繁，请在 <white>{retry}</white> 秒后重试。</red>"
+  database_error: "<red>数据库繁忙，请稍后重试。</red>"
+  player_only: "<red>只有玩家可以兑换。</red>"
+
+command:
+  unknown: "<red>未知子命令。输入 <white>/yc help</white> 查看帮助。</red>"
+  error: "<red>命令执行失败，请查看控制台。</red>"
+  usage:
+    code: "<yellow>用法：</yellow><white>{usage}</white>"
+  list:
+    header: "<dark_gray>━━━━</dark_gray> <aqua><bold>兑换码列表</bold></aqua> <gray>第 {page}/{pages} 页 · 共 {total} 个</gray> <dark_gray>━━━━</dark_gray>"
+    entry: "<gray>»</gray> <click:run_command:'/yc info {code}'><hover:show_text:'<yellow>点击查看 {code}</yellow>'><white>{code}</white></hover></click> <dark_gray>({type})</dark_gray> <green>{used}</green><gray>/</gray><white>{limit}</white> <dark_gray>{status}</dark_gray>"
+    empty: "<gray>暂无兑换码。使用 <white>/yc create [code] [type]</white> 创建。</gray>"
+    footer: "<dark_gray>上一页：{prev} · 下一页：{next}</dark_gray>"
+  info:
+    usage: "<yellow>用法：</yellow><white>/yc info [code]</white>"
+    header: "<dark_gray>━━━━</dark_gray> <aqua><bold>{code}</bold></aqua> <dark_gray>━━━━</dark_gray>"
+    body: "<gray>类型：</gray><white>{type}</white>  <gray>状态：</gray><white>{status}</white>\n<gray>全局限量：</gray><white>{used}</white><gray>/</gray><white>{limit}</white>  <gray>剩余：</gray><white>{remaining}</white>\n<gray>每玩家：</gray><white>{per_player}</white>  <gray>冷却：</gray><white>{cooldown}</white>  <gray>周期：</gray><white>{period}</white>\n<gray>开始：</gray><white>{start}</white>  <gray>结束：</gray><white>{end}</white>\n<gray>权限：</gray><white>{permission}</white>\n<gray>奖励：</gray><white>{rewards}</white>  <gray>分支：</gray><white>{branches}</white>  <gray>UUID 白/黑：</gray><white>{whitelist}/{blacklist}</white>\n<gray>IP 限制：</gray><white>{ip}</white>"
+    display: "<gray>显示名：</gray>"
+  create:
+    usage: "<yellow>用法：</yellow><white>/yc create [code] [ONE_TIME|GLOBAL_LIMIT|PLAYER_LIMIT|UUID_BOUND|PERIODIC|EXPIRING]</white>"
+  delete:
+    usage: "<yellow>用法：</yellow><white>/yc delete [code] confirm</white>"
+    confirm: "<red>确认删除请执行：</red><white>/yc delete {code} confirm</white>"
+  set:
+    usage: "<yellow>用法：</yellow><white>/yc set [code] [field] [value]</white> <gray>字段：type, global-limit, per-player-limit, cooldown, period, start, end, permission, display-name, uuid-whitelist, uuid-blacklist, ip, enabled</gray>"
+  reward:
+    usage: "<yellow>用法：</yellow><white>/yc reward [add|list|remove|clear] [code] ...</white>"
+    add-usage: "<yellow>用法：</yellow><white>/yc reward add [code] [item|money|permission|command] ...</white>"
+    remove-usage: "<yellow>用法：</yellow><white>/yc reward remove [code] [index]</white>"
+    list-header: "<dark_gray>━━━━</dark_gray> <aqua>{code}</aqua> <gray>奖励 {count} 项</gray> <dark_gray>━━━━</dark_gray>"
+    list-entry: "<gray>#{index}</gray> <white>{type}</white> <dark_gray>({id})</dark_gray>"
+  generate:
+    usage: "<yellow>用法：</yellow><white>/yc generate [template] [amount] [length] [prefix]</white>"
+    success: "<green>已生成 {count} 个兑换码。</green> <gray>文件：</gray><white>{file}</white>"
+    failed: "<red>生成失败：</red><white>{reason}</white>"
+  export:
+    started: "<yellow>正在导出 CSV...</yellow>"
+    success: "<green>导出完成：</green><white>{rows}</white> <gray>行 →</gray> <white>{file}</white>"
+    failed: "<red>导出失败：</red><white>{reason}</white>"
+  reload:
+    started: "<yellow>正在重载配置与兑换码...</yellow>"
+    success: "<green>重载完成。</green> <gray>数据库连接设置如需变更请重启服务器。</gray>"
+    failed: "<red>重载失败：</red><white>{reason}</white>"
+  stats: "<gray>兑换码：</gray><white>{codes}</white> <gray>启用：</gray><white>{enabled}</white> <gray>领取记录：</gray><white>{redemptions}</white> <gray>待发奖励：</gray><white>{pending}</white>"
+
+edit:
+  invalid-code: "<red>兑换码 ID 无效：</red><white>{code}</white> <gray>仅允许 A-Z、0-9、_、-，最长 64 字符。</gray>"
+  code-exists: "<red>兑换码已存在：</red><white>{code}</white>"
+  invalid-type: "<red>未知兑换码类型：</red><white>{type}</white>"
+  created: "<green>已创建兑换码 <white>{code}</white>（{type}）。</green> <gray>默认禁用，请配置奖励后启用。</gray>"
+  enabled: "<green>已启用兑换码 <white>{code}</white>。</green>"
+  disabled: "<yellow>已禁用兑换码 <white>{code}</white>。</yellow>"
+  deleted: "<green>已删除兑换码 <white>{code}</white>。</green>"
+  cloned: "<green>已克隆 <white>{code}</white> → <white>{new}</white>。</green> <gray>克隆体默认禁用。</gray>"
+  one-time-locked: "<red>ONE_TIME 兑换码的全局/每玩家次数固定为 1。</red>"
+  player-limit-global: "<red>PLAYER_LIMIT 兑换码全服不限量，不能设置 global-limit。</red>"
+  period-required: "<red>PERIODIC 兑换码必须设置大于 0 的 period。</red>"
+  end-required: "<red>EXPIRING 兑换码必须保留结束时间。</red>"
+  invalid-window: "<red>开始时间必须早于结束时间。</red>"
+  unknown-field: "<red>未知字段：</red><white>{field}</white>"
+  invalid-number: "<red>字段 <white>{field}</white> 需要数字，当前值：</red><white>{value}</white>"
+  invalid-value: "<red>字段 <white>{field}</white> 的值无效：</red><white>{value}</white> <gray>({reason})</gray>"
+  reward-added: "<green>已添加奖励：</green><white>{type}</white> <gray>序号 {index}</gray>"
+  invalid-reward: "<red>奖励格式错误：</red><white>{spec}</white> <gray>({reason})</gray>"
+  reward-index: "<red>奖励序号无效：</red><white>{index}</white>"
+  reward-removed: "<green>已移除奖励 #{index}（{type}）。</green>"
+  rewards-cleared: "<green>已清空 {code} 的 {count} 项奖励。</green>"
+  code-missing: "<red>兑换码不存在：</red><white>{code}</white>"
+  field-set: "<green>已更新 <white>{code}</white> 的 <white>{field}</white> 为 <white>{value}</white>。</green>"
+
+gui:
+  status:
+    active: "启用"
+    disabled: "禁用"
+    not-started: "未开始"
+    expired: "已过期"
+  value:
+    off: "关闭"
+  code-missing: "<red>兑换码不存在：</red><white>{code}</white>"
+  input:
+    prompt: "<yellow>请输入：</yellow><white>{prompt}</white> <dark_gray>(输入 cancel 取消)</dark_gray>"
+    cancel: "<gray>输入 <white>cancel</white> 可取消本次编辑。</gray>"
+    cancelled: "<yellow>已取消编辑。</yellow>"
+    timeout: "<yellow>输入已超时，请重新打开 GUI 编辑。</yellow>"
+    error: "<red>输入处理失败，请查看控制台。</red>"
+  browser:
+    title: "<dark_gray>YuanCode</dark_gray> <gray>»</gray> <white>兑换码</white> <dark_gray>({page}/{pages})</dark_gray>"
+    code-name: "<aqua><bold>{code}</bold></aqua>"
+    code-lore:
+      - "<gray>类型：</gray><white>{type}</white>"
+      - "<gray>状态：</gray><white>{status}</white>"
+      - "<gray>全局限量：</gray><white>{used}</white><gray>/</gray><white>{limit}</white> <dark_gray>·</dark_gray> <gray>每玩家：</gray><white>{per_player}</white>"
+      - "<gray>冷却：</gray><white>{cooldown}</white> <dark_gray>·</dark_gray> <gray>奖励：</gray><white>{rewards}</white>"
+      - "<gray>开始：</gray><white>{start}</white>"
+      - "<gray>结束：</gray><white>{end}</white>"
+      - "<gray>IP：</gray><white>{ip}</white>"
+      - ""
+      - "<yellow>左键编辑</yellow> <dark_gray>|</dark_gray> <yellow>右键启用/禁用</yellow> <dark_gray>|</dark_gray> <red>Shift+右键删除</red>"
+    empty-name: "<gray>暂无兑换码</gray>"
+  button:
+    prev: "<yellow>« 上一页</yellow>"
+    next: "<yellow>下一页 »</yellow>"
+    create: "<green>创建兑换码</green>"
+    close: "<red>关闭</red>"
+  editor:
+    title: "<dark_gray>编辑兑换码</dark_gray> <gray>»</gray> <aqua>{code}</aqua>"
+    info-name: "<aqua><bold>{code}</bold></aqua>"
+    info-lore:
+      - "<gray>类型：</gray><white>{type}</white>"
+      - "<gray>状态：</gray><white>{status}</white>"
+      - "<gray>奖励：</gray><white>{rewards}</white> <dark_gray>·</dark_gray> <gray>分支：</gray><white>{branches}</white>"
+      - ""
+      - "<yellow>点击此处修改显示名</yellow>"
+    field:
+      toggle: "<yellow>启用状态</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      type: "<yellow>类型</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      global-limit: "<yellow>全局限量</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      per-player-limit: "<yellow>每玩家上限</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      cooldown: "<yellow>领取冷却</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      period: "<yellow>周期</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      start: "<yellow>开始时间</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      end: "<yellow>结束时间</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      permission: "<yellow>所需权限</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      uuid-whitelist: "<yellow>UUID 白名单</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      uuid-blacklist: "<yellow>UUID 黑名单</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      ip: "<yellow>IP 限制</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      rewards: "<yellow>奖励列表</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+      branches: "<yellow>条件分支</yellow> <dark_gray>»</dark_gray> <white>{value}</white>"
+    lore-edit:
+      - "<gray>当前值：</gray><white>{value}</white>"
+      - "<yellow>点击修改</yellow>"
+    lore-read:
+      - "<gray>当前值：</gray><white>{value}</white>"
+      - "<dark_gray>只读 · 请在 codes.yml 中编辑</dark_gray>"
+    button:
+      clone: "<green>克隆兑换码</green>"
+      delete: "<red>删除兑换码</red>"
+      back: "<yellow>« 返回列表</yellow>"
+  rewards:
+    title: "<dark_gray>奖励管理</dark_gray> <gray>»</gray> <aqua>{code}</aqua>"
+    entry: "<yellow>奖励 #{index}</yellow> <dark_gray>·</dark_gray> <white>{type}</white>"
+    entry-lore:
+      - "<gray>内容：</gray><white>{detail}</white>"
+      - "<gray>延迟：</gray><white>{delay}</white> <dark_gray>·</dark_gray> <gray>条件：</gray><white>{conditions}</white>"
+      - ""
+      - "<red>Shift+左键移除</red>"
+    empty-name: "<gray>暂无奖励</gray>"
+    empty-lore:
+      - "<gray>点击下方绿宝石添加。</gray>"
+    add: "<green>添加奖励</green>"
+    clear: "<red>清空奖励</red>"
+  prompt:
+    display-name: "显示名（MiniMessage，输入 - 清除）"
+    global-limit: "全局限量（0 = 无限）"
+    per-player-limit: "每玩家上限（0 = 无限）"
+    cooldown: "冷却时间（如 30s、5m、1h，0 = 无）"
+    period: "周期（如 daily、weekly、monthly、1d、7d、30d）"
+    start: "开始时间（yyyy-MM-dd HH:mm:ss，- = 清除）"
+    end: "结束时间（yyyy-MM-dd HH:mm:ss，- = 清除）"
+    permission: "所需权限节点（- = 清除）"
+    uuid-whitelist: "UUID 白名单（逗号或空格分隔，- = 清空）"
+    uuid-blacklist: "UUID 黑名单（逗号或空格分隔，- = 清空）"
+    ip: "IP 限制：<最大领取数> <最大账号数> <窗口>（如 3 2 7d，0 0 0 = 关闭）"
+    create: "创建兑换码：[code] <类型>"
+    create-usage: "<red>格式错误。示例：</red><white>WELCOME ONE_TIME</white>"
+    add-reward: "奖励：<money 500 | item DIAMOND 3 名称 | permission node 30d | command give %player% diamond 1>"
+  confirm:
+    delete: "<red>再次点击以删除 <white>{code}</white>（10 秒内有效）</red>"
+    clear: "<red>再次点击以清空 <white>{code}</white> 的所有默认奖励（10 秒内有效）</red>"
+  branches:
+    info: "<gray>该兑换码有 <white>{count}</white> 个条件分支，请编辑 codes.yml 中的 branches。</gray>"

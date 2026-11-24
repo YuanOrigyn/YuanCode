@@ -1,0 +1,195 @@
+# YuanCode codes.yml 示例
+# 所有示例默认 enabled: false，避免新服安装后可直接白嫖。
+# 请先配置奖励、确认限制，再将 enabled 改为 true。
+#
+# 兑换码 ID 会统一转为大写，只允许 A-Z、0-9、'_' 和 '-'。
+# 类型：
+#   ONE_TIME      全服只能领取 1 次（每玩家上限强制为 1）
+#   GLOBAL_LIMIT  全服共可领取 global-limit 次
+#   PLAYER_LIMIT  全服不限量，按 per-player-limit 限制每个玩家
+#   UUID_BOUND    只有 uuid.whitelist 中的 UUID 可以领取
+#   PERIODIC      每玩家在每个周期内重置领取额度
+#   EXPIRING      仅在 start/end 时间窗口内有效（必须设置 end）
+#
+# 条件（全部满足才通过，AND 关系）：
+#   permission:group.vip
+#   !permission:group.banned
+#   world:world_nether
+#   gamemode:survival
+#   papi:%player_level% >= 10
+#   papi:%player_name% contains a
+#
+# 奖励类型：item | money | permission | command
+# delay：30s / 5m / 1h / 1d；条件在延迟发放前计算。
+# branches 从上到下匹配，第一个满足的分支生效。
+# 若没有分支命中，则使用顶层 rewards 作为兜底。
+
+codes:
+  WELCOME-2026:
+    enabled: false
+    type: ONE_TIME
+    display-name: "<gradient:#00E0FF:#7A5CFF><bold>2026 新手礼包</bold></gradient>"
+    start: "2026-01-01 00:00:00"
+    end: "2026-12-31 23:59:59"
+    global-limit: 1
+    per-player-limit: 1
+    cooldown: "0s"
+    permission: ""
+    uuid:
+      whitelist: []
+      blacklist: []
+    ip:
+      max-claims: 3
+      max-accounts: 2
+      window: "7d"
+    rewards:
+      - type: item
+        material: DIAMOND
+        amount: 3
+        name: "<aqua>新手钻石</aqua>"
+        lore:
+          - "<gray>来自 YuanCode 的新手礼包。</gray>"
+      - type: money
+        amount: 500
+      - type: command
+        command: "give %player% cooked_beef 8"
+      - type: permission
+        node: "yuancode.example.welcome"
+        duration: "30d"
+        delay: "5s"
+        conditions:
+          - "permission:yuancode.example.bonus"
+    branches:
+      - id: "vip"
+        conditions:
+          - "permission:group.vip"
+        rewards:
+          - type: money
+            amount: 1500
+          - type: item
+            material: EMERALD
+            amount: 8
+            name: "<green>VIP 额外奖励</green>"
+          - type: permission
+            node: "yuancode.example.vip"
+            duration: "30d"
+    # 当没有任何分支命中时使用。
+    # 本示例中 VIP 分支是可选的，普通玩家会走上面的顶层奖励。
+
+  GLOBAL-100:
+    enabled: false
+    type: GLOBAL_LIMIT
+    display-name: "<yellow>限量 100 份</yellow>"
+    global-limit: 100
+    per-player-limit: 1
+    cooldown: "30s"
+    uuid:
+      whitelist: []
+      blacklist: []
+    ip:
+      max-claims: 3
+      max-accounts: 2
+      window: "7d"
+    rewards:
+      - type: money
+        amount: 250
+      - type: item
+        material: GOLDEN_APPLE
+        amount: 2
+        name: "<gold>限量金苹果</gold>"
+
+  PLAYER-ONCE:
+    enabled: false
+    type: PLAYER_LIMIT
+    display-name: "<aqua>每人限领一次</aqua>"
+    global-limit: 0
+    per-player-limit: 1
+    cooldown: "0s"
+    uuid:
+      whitelist: []
+      blacklist: []
+    ip:
+      max-claims: 0
+      max-accounts: 0
+      window: "7d"
+    rewards:
+      - type: money
+        amount: 200
+      - type: item
+        material: EXPERIENCE_BOTTLE
+        amount: 8
+        name: "<green>经验瓶</green>"
+
+  VIP-UUID-ONLY:
+    enabled: false
+    type: UUID_BOUND
+    display-name: "<light_purple>VIP 专属兑换码</light_purple>"
+    global-limit: 0
+    per-player-limit: 1
+    uuid:
+      whitelist:
+        - "00000000-0000-0000-0000-000000000000"
+        - "11111111-1111-1111-1111-111111111111"
+      blacklist: []
+    ip:
+      max-claims: 1
+      max-accounts: 1
+      window: "30d"
+    rewards:
+      - type: permission
+        node: "yuancode.example.uuid"
+        duration: "permanent"
+      - type: command
+        command: "say %player% redeemed the VIP UUID code"
+
+  DAILY-BONUS:
+    enabled: false
+    type: PERIODIC
+    display-name: "<green>每日签到奖励</green>"
+    global-limit: 0
+    per-player-limit: 1
+    cooldown: "0s"
+    period: "daily"
+    uuid:
+      whitelist: []
+      blacklist: []
+    ip:
+      max-claims: 0
+      max-accounts: 0
+      window: "7d"
+    rewards:
+      - type: money
+        amount: 100
+      - type: item
+        material: BREAD
+        amount: 8
+        name: "<yellow>每日面包</yellow>"
+
+  FLASH-SALE:
+    enabled: false
+    type: EXPIRING
+    display-name: "<red>限时闪购</red>"
+    start: "2026-11-01 00:00:00"
+    end: "2026-12-31 23:59:59"
+    global-limit: 500
+    per-player-limit: 1
+    cooldown: "1h"
+    uuid:
+      whitelist: []
+      blacklist: []
+    ip:
+      max-claims: 5
+      max-accounts: 3
+      window: "1d"
+    rewards:
+      - type: money
+        amount: 800
+        conditions:
+          - "papi:%player_level% >= 10"
+      - type: money
+        amount: 300
+        conditions:
+          - "papi:%player_level% < 10"
+      - type: command
+        command: "broadcast %player% claimed the flash sale!"
+        delay: "1m"

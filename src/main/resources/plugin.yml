@@ -1,0 +1,74 @@
+# YuanCode 插件描述文件
+# 适用 Paper 26.1+ / Java 25
+name: YuanCode
+version: 1.0.0
+main: com.yuan.yuancode.YuanCodePlugin
+api-version: '26.1'
+description: Advanced redemption codes with SQL storage, GUI editor, branches and anti-abuse controls.
+author: Yuan
+load: POSTWORLD
+folia-supported: false
+softdepend:
+  - Vault
+  - PlaceholderAPI
+  - LuckPerms
+
+commands:
+  yuancode:
+    description: Redeem codes and manage YuanCode.
+    usage: /yuancode help
+    aliases:
+      - yc
+
+permissions:
+  yuancode.use:
+    description: Allows redeeming redemption codes.
+    default: true
+  yuancode.admin:
+    description: Grants every YuanCode administration permission.
+    default: op
+    children:
+      yuancode.admin.gui: true
+      yuancode.admin.list: true
+      yuancode.admin.info: true
+      yuancode.admin.create: true
+      yuancode.admin.delete: true
+      yuancode.admin.edit: true
+      yuancode.admin.reward: true
+      yuancode.admin.generate: true
+      yuancode.admin.export: true
+      yuancode.admin.reload: true
+      yuancode.admin.stats: true
+  yuancode.admin.gui:
+    description: Opens the code browser GUI.
+    default: false
+  yuancode.admin.list:
+    description: Lists configured codes.
+    default: false
+  yuancode.admin.info:
+    description: Shows details for a code.
+    default: false
+  yuancode.admin.create:
+    description: Creates codes.
+    default: false
+  yuancode.admin.delete:
+    description: Deletes codes.
+    default: false
+  yuancode.admin.edit:
+    description: Edits code fields.
+    default: false
+  yuancode.admin.reward:
+    description: Edits code rewards.
+    default: false
+  yuancode.admin.generate:
+    description: Batch-generates random codes.
+    default: false
+  yuancode.admin.export:
+    description: Exports redemption records to CSV.
+    default: false
+  yuancode.admin.reload:
+    description: Reloads config, lang and codes.
+    default: false
+  yuancode.admin.stats:
+    description: Shows database statistics.
+    default: false

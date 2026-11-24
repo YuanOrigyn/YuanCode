@@ -1,0 +1,88 @@
+# YuanCode 配置文件
+# 适用 Paper 26.1+ / Java 25
+config-version: 1
+
+settings:
+  # "server" 表示使用 JVM 默认时区；也可填写 IANA 时区，例如 Asia/Shanghai。
+  time-zone: "server"
+  date-format: "yyyy-MM-dd HH:mm:ss"
+  debug: false
+  # 写入每条领取记录；多服网络请为每个服务器设置唯一 ID。
+  server-id: "server-1"
+
+  security:
+    # 滑动窗口防暴力尝试（仅内存）；0 表示关闭。
+    max-attempts: 8
+    attempt-window: "10s"
+    block-duration: "30s"
+    # 存储前对玩家 IP 做哈希；IP 限制仍然有效，CSV 中显示哈希值。
+    hash-ip: false
+    ip-salt: "change-this-salt"
+
+  pending:
+    # 延迟奖励从数据库轮询的间隔。
+    check-interval: "5s"
+    # 超过该时长仍未发放的奖励会被清理。
+    expire-after: "30d"
+    # 在线发放失败达到该次数后，删除待发奖励记录。
+    max-attempts: 8
+
+  generator:
+    length: 10
+    charset: "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    max-batch: 5000
+
+  gui:
+    # 7..28；GUI 最多使用 28 个内容槽位。
+    page-size: 28
+
+  export:
+    include-ip: true
+
+  auto-delete-codes:
+    # 默认关闭，避免误删；开启后定期清理已兑换完或已过期的兑换码。
+    enabled: false
+    # 全服领取次数达到上限后自动删除该兑换码。
+    delete-exhausted: true
+    # 超过 end 结束时间后自动删除该兑换码。
+    delete-expired: true
+    # 后台扫描间隔；同时会在每次兑换后立即检查当前兑换码。
+    check-interval: "5m"
+
+database:
+  # SQLITE 或 MYSQL
+  type: SQLITE
+  sqlite:
+    file: "yuancode.db"
+  mysql:
+    host: "127.0.0.1"
+    port: 3306
+    database: "yuancode"
+    username: "root"
+    password: ""
+    use-ssl: false
+    pool-size: 6
+    connection-timeout-ms: 10000
+    properties:
+      serverTimezone: "UTC"
+      characterEncoding: "UTF-8"
+
+hooks:
+  vault:
+    enabled: true
+  placeholderapi:
+    enabled: true
+  permission:
+    # auto = 检测到 LuckPerms 时执行命令，否则使用在线会话附件
+    # command = 始终执行下面的命令模板
+    # attachment = 始终使用 Bukkit 在线会话附件（不持久化）
+    provider: "auto"
+    temporary-command: "lp user %player% permission settemp %permission% true %duration%"
+    permanent-command: "lp user %player% permission set %permission% true"
+
+rewards:
+  item:
+    # 背包已满时，将剩余物品掉落在玩家脚下。
+    drop-when-full: true
+  command:
+    strip-leading-slash: true
